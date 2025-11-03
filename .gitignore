@@ -1,0 +1,17 @@
+# Python cache and compiled files
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+
+# Jupyter notebook checkpoints
+*.ipynb_checkpoints/
+
+# Data files (raw and processed)
+data/
+*.csv
+
+# System files
+.DS_Store
+Thumbs.db
