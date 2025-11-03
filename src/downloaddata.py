@@ -1,3 +1,4 @@
+# src/downloaddata.py
 import yfinance as yf
 from pathlib import Path
 import pandas as pd
@@ -11,15 +12,6 @@ def download_stock_data(
 ) -> pd.DataFrame:
     """
     Downloads stock data from Yahoo Finance and saves it as CSV.
-    
-    Parameters:
-        ticker: Stock symbol (default: 'AAPL')
-        start_date: Start date in YYYY-MM-DD format
-        end_date: End date in YYYY-MM-DD format
-        interval: Data interval ('1d' for daily)
-        
-    Returns:
-        DataFrame with the stock data
     """
     # Create data/raw directory if it doesn't exist
     raw_dir = Path(__file__).resolve().parents[1] / "data/raw"
@@ -28,6 +20,11 @@ def download_stock_data(
     # Download data
     print(f"Downloading {ticker} data from {start_date} to {end_date}...")
     df = yf.download(ticker, start=start_date, end=end_date, interval=interval)
+    
+    # ✅ PROPERLY Fix MultiIndex columns
+    if isinstance(df.columns, pd.MultiIndex):
+        # Extract just the price column names (Open, High, Low, Close, Volume)
+        df.columns = df.columns.droplevel(1)  # Remove the ticker level
     
     # Save to CSV
     filename = f"{ticker}_{start_date}_{end_date}_daily.csv"
@@ -38,5 +35,5 @@ def download_stock_data(
     return df
 
 if __name__ == "__main__":
-    # This will run when you execute the file directly
     download_stock_data()
+    
